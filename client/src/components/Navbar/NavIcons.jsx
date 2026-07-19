@@ -5,119 +5,46 @@ import {
   Search,
 } from "lucide-react";
 
+const iconButton =
+  "relative flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white/80 backdrop-blur shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 hover:shadow-lg";
+
+const badge =
+  "absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white shadow-md";
+
 const NavIcons = () => {
   return (
-    <div className="flex items-center gap-1 sm:gap-2">
-
-      <button className="
-flex
-h-11
-w-11
-items-center
-justify-center
-rounded-full
-border
-border-gray-200
-bg-white
-shadow-sm
-transition-all
-duration-300
-hover:-translate-y-1
-hover:border-blue-500
-hover:text-blue-600
-hover:shadow-lg
-">
+    <div className="flex items-center gap-2">
+      {/* Search */}
+      <button className={`${iconButton} xl:hidden`}>
         <Search size={20} />
       </button>
 
-      <button className="
-flex
-h-11
-w-11
-items-center
-justify-center
-rounded-full
-border
-border-gray-200
-bg-white
-shadow-sm
-transition-all
-duration-300
-hover:-translate-y-1
-hover:border-blue-500
-hover:text-blue-600
-hover:shadow-lg
-">
+      {/* Wishlist */}
+      <button className={`${iconButton} hidden md:flex`}>
         <Heart size={20} />
 
-        <span className="
-absolute
--right-1
--top-1
-flex
-h-5
-w-5
-items-center
-justify-center
-rounded-full
-bg-gradient-to-r
-from-red-500
-to-pink-500
-text-[10px]
-font-bold
-text-white
-shadow-md
-">
-  0
-</span>
-      </button>
-
-      <button className="
-flex
-h-11
-w-11
-items-center
-justify-center
-rounded-full
-border
-border-gray-200
-bg-white
-shadow-sm
-transition-all
-duration-300
-hover:-translate-y-1
-hover:border-blue-500
-hover:text-blue-600
-hover:shadow-lg
-">
-        <ShoppingCart size={20} />
-
-        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs text-white">
+        <span
+          className={`${badge} bg-gradient-to-r from-pink-500 to-red-500`}
+        >
           0
         </span>
       </button>
 
-      <button className="
-flex
-h-11
-w-11
-items-center
-justify-center
-rounded-full
-border
-border-gray-200
-bg-white
-shadow-sm
-transition-all
-duration-300
-hover:-translate-y-1
-hover:border-blue-500
-hover:text-blue-600
-hover:shadow-lg
-">
-        <User size={20} />
+      {/* Cart */}
+      <button className={iconButton}>
+        <ShoppingCart size={20} />
+
+        <span
+          className={`${badge} bg-gradient-to-r from-blue-600 to-indigo-600`}
+        >
+          0
+        </span>
       </button>
 
+      {/* Profile */}
+      <button className={`${iconButton} hidden lg:flex`}>
+        <User size={20} />
+      </button>
     </div>
   );
 };

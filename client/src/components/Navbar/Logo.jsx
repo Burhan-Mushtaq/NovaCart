@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
+import { ShoppingBag } from "lucide-react";
 
 const Logo = () => {
   return (
     <Link
       to="/"
-      className="flex items-center gap-3 group"
+      className="group flex items-center gap-3"
     >
-      {/* Brand Mark */}
+      {/* Logo Icon */}
       <div
         className="
           flex
@@ -19,22 +20,25 @@ const Logo = () => {
           from-blue-600
           via-indigo-600
           to-violet-600
+          text-white
           shadow-lg
           transition-all
           duration-300
-          group-hover:scale-110
+          group-hover:-translate-y-1
           group-hover:rotate-6
+          group-hover:shadow-blue-300/40
         "
       >
-        <div className="h-5 w-5 rounded-md bg-white rotate-45"></div>
+        <ShoppingBag size={22} strokeWidth={2.4} />
       </div>
 
-      <div>
-        <h1 className="text-2xl font-extrabold tracking-tight">
+      {/* Text */}
+      <div className="hidden sm:block">
+        <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
           NovaCart
         </h1>
 
-        <p className="text-xs text-gray-500 -mt-1 tracking-widest uppercase">
+        <p className="text-[11px] uppercase tracking-[0.3em] text-gray-500">
           Premium Store
         </p>
       </div>
