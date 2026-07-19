@@ -1,8 +1,14 @@
+import Hero from "../components/Hero/Hero";
+import Categories from "../components/Categories/Categories";
+import FeaturedProducts from "../components/FeaturedProducts/FeaturedProducts";
+
 const Home = () => {
   return (
-    <div className="text-4xl text-center mt-40">
-      Home Page
-    </div>
+    <>
+    <Hero />
+    <Categories />
+    <FeaturedProducts />
+</>
   );
 };
 
