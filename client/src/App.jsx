@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import MainLayout from "./layouts/MainLayout";
+import Wishlist from "./pages/Wishlist";
 
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
-import Wishlist from "./pages/Wishlist";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Orders from "./pages/Orders";
@@ -23,6 +23,8 @@ function App() {
           <Route path="/" element={<Home />} />
 
           <Route path="/shop" element={<Shop />} />
+
+          <Route path="/wishlist" element={<Wishlist />} />
 
           <Route path="/product/:id" element={<Product />} />
 

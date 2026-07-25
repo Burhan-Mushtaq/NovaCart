@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Heart,
   ShoppingCart,
@@ -35,22 +36,22 @@ const NavIcons = () => {
           <Search size={20} />
         </button>
 
-        {/* Wishlist */}
-        <button
-          className={`${iconButton} hidden md:flex`}
-          aria-label="Wishlist"
-        >
-          <Heart size={20} />
-
-         <motion.span
-  key={wishlistCount}
-  initial={{ scale: 0 }}
-  animate={{ scale: 1 }}
-  className={`${badge} bg-gradient-to-r from-pink-500 to-red-500`}
+       <Link
+  to="/wishlist"
+  className={`${iconButton} hidden md:flex`}
+  aria-label="Wishlist"
 >
-  {wishlistCount}
-</motion.span>
-        </button>
+  <Heart size={20} />
+
+  <motion.span
+    key={wishlistCount}
+    initial={{ scale: 0 }}
+    animate={{ scale: 1 }}
+    className={`${badge} bg-gradient-to-r from-pink-500 to-red-500`}
+  >
+    {wishlistCount}
+  </motion.span>
+</Link>
 
         {/* Cart */}
         <button
