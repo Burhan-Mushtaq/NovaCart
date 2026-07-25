@@ -9,17 +9,20 @@ import { motion } from "framer-motion";
 
 import { useCart } from "../../context/CartContext";
 import CartDrawer from "../cart/CartDrawer";
+import { useWishlist } from "../../context/WishlistContext";
 
 const iconButton =
   "relative flex h-11 w-11 items-center justify-center rounded-xl border border-gray-200 bg-white/80 backdrop-blur shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 hover:shadow-lg";
 
 const badge =
   "absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold text-white shadow-md";
+  
 
 const NavIcons = () => {
   const [cartOpen, setCartOpen] = useState(false);
 
   const { totalItems } = useCart();
+  const { wishlistCount } = useWishlist();
 
   return (
     <>
@@ -39,11 +42,14 @@ const NavIcons = () => {
         >
           <Heart size={20} />
 
-          <span
-            className={`${badge} bg-gradient-to-r from-pink-500 to-red-500`}
-          >
-            0
-          </span>
+         <motion.span
+  key={wishlistCount}
+  initial={{ scale: 0 }}
+  animate={{ scale: 1 }}
+  className={`${badge} bg-gradient-to-r from-pink-500 to-red-500`}
+>
+  {wishlistCount}
+</motion.span>
         </button>
 
         {/* Cart */}
