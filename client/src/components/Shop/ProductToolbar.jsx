@@ -8,6 +8,7 @@ const ProductToolbar = ({
   total,
   sortBy,
   setSortBy,
+  openFilters,
 }) => {
   return (
     <div
@@ -55,28 +56,29 @@ const ProductToolbar = ({
         {/* Mobile Filters */}
 
         <button
+          onClick={openFilters}
           className="
-          flex
-          items-center
-          gap-2
-          rounded-xl
-          border
-          border-gray-200
-          bg-white
-          px-4
-          py-3
-          font-medium
-          shadow-sm
-          transition
-          hover:border-blue-500
-          hover:text-blue-600
-          lg:hidden
-        "
+    flex
+    items-center
+    gap-2
+    rounded-xl
+    border
+    border-gray-200
+    bg-white
+    px-4
+    py-3
+    font-medium
+    shadow-sm
+    transition
+    hover:border-blue-500
+    hover:text-blue-600
+    lg:hidden
+  "
         >
           <SlidersHorizontal size={18} />
-
           Filters
         </button>
+
 
         {/* Sort */}
 

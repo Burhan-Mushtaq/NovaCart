@@ -4,6 +4,7 @@ import products from "../data/products";
 
 import ShopHero from "../components/Shop/ShopHero";
 import FilterSidebar from "../components/Shop/FilterSidebar";
+import MobileFilters from "../components/Shop/MobileFilters";
 import ProductToolbar from "../components/Shop/ProductToolbar";
 import ProductPagination from "../components/Shop/ProductPagination";
 import ProductCard from "../components/product/ProductCard";
@@ -16,6 +17,7 @@ const Shop = () => {
   const [selectedBrand, setSelectedBrand] = useState("All");
   const [maxPrice, setMaxPrice] = useState(250000);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const [sortBy, setSortBy] = useState("featured");
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,11 +118,31 @@ const Shop = () => {
         />
 
         <section>
+          <MobileFilters
+            open={mobileFiltersOpen}
+            onClose={() => setMobileFiltersOpen(false)}
+
+            search={search}
+            setSearch={setSearch}
+
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
+
+            selectedBrand={selectedBrand}
+            setSelectedBrand={setSelectedBrand}
+
+            maxPrice={maxPrice}
+            setMaxPrice={setMaxPrice}
+
+            selectedRating={selectedRating}
+            setSelectedRating={setSelectedRating}
+          />
 
           <ProductToolbar
             total={filteredProducts.length}
             sortBy={sortBy}
             setSortBy={setSortBy}
+            openFilters={() => setMobileFiltersOpen(true)}
           />
 
           {displayedProducts.length === 0 ? (
