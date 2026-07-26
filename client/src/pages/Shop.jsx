@@ -1,9 +1,95 @@
-const Home = () => {
+import { useState } from "react";
+import products from "../data/products";
+
+import ShopHero from "../components/shop/ShopHero";
+import FilterSidebar from "../components/shop/FilterSidebar";
+import ProductToolbar from "../components/shop/ProductToolbar";
+import ProductCard from "../components/product/ProductCard";
+import ProductPagination from "../components/shop/ProductPagination";
+
+const PRODUCTS_PER_PAGE = 8;
+
+const Shop = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [sortBy, setSortBy] = useState("featured");
+
+  let filteredProducts = [...products];
+
+  switch (sortBy) {
+    case "low":
+      filteredProducts.sort((a, b) => a.price - b.price);
+      break;
+
+    case "high":
+      filteredProducts.sort((a, b) => b.price - a.price);
+      break;
+
+    case "rating":
+      filteredProducts.sort((a, b) => b.rating - a.rating);
+      break;
+
+    case "newest":
+      filteredProducts.sort((a, b) => b.id - a.id);
+      break;
+
+    default:
+      break;
+  }
+
+  const totalPages = Math.ceil(
+    filteredProducts.length / PRODUCTS_PER_PAGE
+  );
+
+  const startIndex =
+    (currentPage - 1) * PRODUCTS_PER_PAGE;
+
+  const displayedProducts =
+    filteredProducts.slice(
+      startIndex,
+      startIndex + PRODUCTS_PER_PAGE
+    );
+
   return (
-    <div className="text-4xl text-center mt-40">
-      Shop Page
-    </div>
+    <main className="bg-[#fafafa]">
+
+      <ShopHero total={filteredProducts.length} />
+
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 lg:grid-cols-[280px_1fr]">
+
+        <FilterSidebar />
+
+        <div>
+
+          <ProductToolbar
+            total={filteredProducts.length}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
+
+          <div className="mt-8 grid gap-7 sm:grid-cols-2 xl:grid-cols-3">
+
+            {displayedProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+              />
+            ))}
+
+          </div>
+
+          <ProductPagination
+            page={currentPage}
+            totalPages={totalPages}
+            setPage={setCurrentPage}
+          />
+
+        </div>
+
+      </div>
+
+    </main>
   );
 };
 
-export default Home;
+export default Shop;
