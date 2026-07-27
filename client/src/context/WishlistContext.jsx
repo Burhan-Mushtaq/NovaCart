@@ -1,11 +1,6 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-const WishlistContext = createContext(null);
+const WishlistContext = createContext();
 
 export const useWishlist = () => {
   const context = useContext(WishlistContext);
@@ -21,16 +16,9 @@ export const useWishlist = () => {
 
 export const WishlistProvider = ({ children }) => {
   const [wishlistItems, setWishlistItems] = useState(() => {
-    try {
-      const savedWishlist =
-        localStorage.getItem("novacart-wishlist");
+    const saved = localStorage.getItem("novacart-wishlist");
 
-      return savedWishlist
-        ? JSON.parse(savedWishlist)
-        : [];
-    } catch {
-      return [];
-    }
+    return saved ? JSON.parse(saved) : [];
   });
 
   useEffect(() => {
@@ -40,51 +28,82 @@ export const WishlistProvider = ({ children }) => {
     );
   }, [wishlistItems]);
 
-  const isInWishlist = (productId) => {
-    return wishlistItems.some(
-      (item) => item.id === productId
-    );
-  };
+  // -----------------------------
+  // Add To Wishlist
+  // -----------------------------
 
-  const toggleWishlist = (product) => {
-    setWishlistItems((currentItems) => {
-      const exists = currentItems.some(
+  const addToWishlist = (product) => {
+    setWishlistItems((prev) => {
+      const exists = prev.find(
         (item) => item.id === product.id
       );
 
-      if (exists) {
-        return currentItems.filter(
-          (item) => item.id !== product.id
-        );
-      }
+      if (exists) return prev;
 
-      return [...currentItems, product];
+      return [...prev, product];
     });
   };
 
-  const removeFromWishlist = (productId) => {
-    setWishlistItems((currentItems) =>
-      currentItems.filter(
-        (item) => item.id !== productId
-      )
+  // -----------------------------
+  // Remove From Wishlist
+  // -----------------------------
+
+  const removeFromWishlist = (id) => {
+    setWishlistItems((prev) =>
+      prev.filter((item) => item.id !== id)
     );
   };
+
+  // -----------------------------
+  // Toggle Wishlist
+  // -----------------------------
+
+  const toggleWishlist = (product) => {
+    const exists = wishlistItems.find(
+      (item) => item.id === product.id
+    );
+
+    if (exists) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
+  // -----------------------------
+  // Check Wishlist
+  // -----------------------------
+
+  const isInWishlist = (id) => {
+    return wishlistItems.some(
+      (item) => item.id === id
+    );
+  };
+
+  // -----------------------------
+  // Clear Wishlist
+  // -----------------------------
 
   const clearWishlist = () => {
     setWishlistItems([]);
   };
 
+  const value = {
+    wishlistItems,
+
+    addToWishlist,
+    removeFromWishlist,
+    toggleWishlist,
+
+    isInWishlist,
+
+    clearWishlist,
+
+    totalWishlistItems: wishlistItems.length,
+  };
+
   return (
-    <WishlistContext.Provider
-      value={{
-        wishlistItems,
-        toggleWishlist,
-        removeFromWishlist,
-        clearWishlist,
-        isInWishlist,
-        wishlistCount: wishlistItems.length,
-      }}
-    >
+    <WishlistContext.Provider value={value}>
       {children}
     </WishlistContext.Provider>
   );
