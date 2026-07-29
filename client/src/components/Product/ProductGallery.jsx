@@ -1,230 +1,231 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Heart,
   Share2,
-  Expand,
-  ChevronLeft,
-  ChevronRight,
+  ZoomIn,
 } from "lucide-react";
 
 const ProductGallery = ({ product }) => {
-  const [selectedImage, setSelectedImage] = useState(
-    product.images?.[0] || product.image
-  );
-
-  useEffect(() => {
-    setSelectedImage(product.images?.[0] || product.image);
-  }, [product]);
 
   const images =
-    product.images && product.images.length
+    product.images?.length > 0
       ? product.images
       : [product.image];
 
-  const currentIndex = images.indexOf(selectedImage);
+  const [selectedImage, setSelectedImage] = useState(
+    images[0]
+  );
 
-  const nextImage = () => {
-    const next =
-      (currentIndex + 1) % images.length;
-
-    setSelectedImage(images[next]);
-  };
-
-  const previousImage = () => {
-    const prev =
-      (currentIndex - 1 + images.length) %
-      images.length;
-
-    setSelectedImage(images[prev]);
-  };
+  const [liked, setLiked] = useState(false);
 
   return (
+
     <div className="space-y-6">
 
       {/* Main Image */}
 
-      <div className="group relative overflow-hidden rounded-3xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 shadow-sm">
+      <motion.div
+        layout
+        className="
+        group
+        relative
+        overflow-hidden
+        rounded-3xl
+        border
+        border-gray-200
+        bg-gradient-to-br
+        from-gray-50
+        via-white
+        to-gray-100
+      "
+      >
 
-        {/* Top Buttons */}
+        {/* Discount */}
 
-        <div className="absolute right-5 top-5 z-20 flex flex-col gap-3">
+        {product.discount && (
 
-          <button
+          <div
             className="
-            flex
-            h-11
-            w-11
-            items-center
-            justify-center
-            rounded-2xl
-            bg-white/90
-            shadow-lg
-            backdrop-blur
-            transition
-            hover:text-red-500
+            absolute
+            left-6
+            top-6
+            z-20
+            rounded-full
+            bg-red-500
+            px-4
+            py-2
+            text-sm
+            font-bold
+            text-white
           "
           >
-            <Heart size={20} />
+
+            {product.discount}% OFF
+
+          </div>
+
+        )}
+
+        {/* Floating Actions */}
+
+        <div
+          className="
+          absolute
+          right-6
+          top-6
+          z-20
+          flex
+          flex-col
+          gap-3
+        "
+        >
+
+          <button
+            onClick={() => setLiked(!liked)}
+            className="
+            flex
+            h-12
+            w-12
+            items-center
+            justify-center
+            rounded-full
+            bg-white
+            shadow-lg
+            transition
+            hover:scale-110
+          "
+          >
+
+            <Heart
+              size={20}
+              className={
+                liked
+                  ? "fill-red-500 text-red-500"
+                  : ""
+              }
+            />
+
           </button>
 
           <button
             className="
             flex
-            h-11
-            w-11
+            h-12
+            w-12
             items-center
             justify-center
-            rounded-2xl
-            bg-white/90
+            rounded-full
+            bg-white
             shadow-lg
-            backdrop-blur
             transition
-            hover:text-blue-600
+            hover:scale-110
           "
           >
+
             <Share2 size={20} />
-          </button>
 
-          <button
-            className="
-            flex
-            h-11
-            w-11
-            items-center
-            justify-center
-            rounded-2xl
-            bg-white/90
-            shadow-lg
-            backdrop-blur
-            transition
-            hover:text-green-600
-          "
-          >
-            <Expand size={20} />
           </button>
 
         </div>
 
-        {/* Previous */}
+        {/* Image */}
 
-        {images.length > 1 && (
-          <button
-            onClick={previousImage}
-            className="
-            absolute
-            left-5
-            top-1/2
-            z-20
-            flex
-            h-11
-            w-11
-            -translate-y-1/2
-            items-center
-            justify-center
-            rounded-full
-            bg-white
-            shadow-lg
-            transition
-            hover:bg-blue-600
-            hover:text-white
-          "
-          >
-            <ChevronLeft />
-          </button>
-        )}
-
-        {/* Next */}
-
-        {images.length > 1 && (
-          <button
-            onClick={nextImage}
-            className="
-            absolute
-            right-20
-            top-1/2
-            z-20
-            flex
-            h-11
-            w-11
-            -translate-y-1/2
-            items-center
-            justify-center
-            rounded-full
-            bg-white
-            shadow-lg
-            transition
-            hover:bg-blue-600
-            hover:text-white
-          "
-          >
-            <ChevronRight />
-          </button>
-        )}
-
-        {/* Main Image */}
-
-        <motion.img
-          key={selectedImage}
-          src={selectedImage}
-          alt={product.name}
-          initial={{
-            opacity: 0,
-            scale: .95,
-          }}
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-          transition={{
-            duration: .30,
-          }}
+        <div
           className="
-          mx-auto
+          flex
           h-[520px]
-          object-contain
-          transition-transform
-          duration-500
-          group-hover:scale-110
+          items-center
+          justify-center
+          overflow-hidden
         "
-        />
+        >
 
-      </div>
+          <AnimatePresence mode="wait">
+
+            <motion.img
+              key={selectedImage}
+              src={selectedImage}
+              alt={product.name}
+              initial={{
+                opacity: 0,
+                scale: .9,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+              }}
+              transition={{
+                duration: .3,
+              }}
+              className="
+              h-full
+              w-full
+              object-contain
+              transition-transform
+              duration-500
+              group-hover:scale-110
+            "
+            />
+
+          </AnimatePresence>
+
+        </div>
+
+        {/* Zoom */}
+
+        <div
+          className="
+          pointer-events-none
+          absolute
+          bottom-6
+          right-6
+          rounded-full
+          bg-white/90
+          p-3
+          shadow-lg
+        "
+        >
+
+          <ZoomIn size={20} />
+
+        </div>
+
+      </motion.div>
 
       {/* Thumbnails */}
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="flex gap-4 overflow-x-auto pb-2">
 
-        {images.map((image) => (
+        {images.map((image, index) => (
 
           <button
-            key={image}
-            onClick={() =>
-              setSelectedImage(image)
-            }
+            key={index}
+            onClick={() => setSelectedImage(image)}
             className={`
               overflow-hidden
               rounded-2xl
               border-2
               transition-all
-              duration-300
               ${
                 selectedImage === image
-                  ? "border-blue-600 shadow-lg"
-                  : "border-gray-200 hover:border-blue-400"
+                  ? "border-blue-600"
+                  : "border-gray-200"
               }
             `}
           >
 
             <img
               src={image}
-              alt={product.name}
+              alt=""
               className="
-              h-28
-              w-full
-              object-cover
-              transition
-              hover:scale-105
+              h-24
+              w-24
+              object-contain
+              bg-gray-50
             "
             />
 
@@ -234,23 +235,10 @@ const ProductGallery = ({ product }) => {
 
       </div>
 
-      {/* Image Counter */}
-
-      <div className="text-center text-sm text-gray-500">
-
-        Image{" "}
-        <span className="font-bold">
-          {currentIndex + 1}
-        </span>{" "}
-        of{" "}
-        <span className="font-bold">
-          {images.length}
-        </span>
-
-      </div>
-
     </div>
+
   );
+
 };
 
 export default ProductGallery;

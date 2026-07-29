@@ -1,74 +1,116 @@
-import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
+import { products } from "../../data/products";
 import ProductCard from "./ProductCard";
-import products from "../../data/products";
 
-const RelatedProducts = () => {
-  const relatedProducts = products.slice(0, 4);
+const RelatedProducts = ({ product }) => {
+
+  const relatedProducts = products
+    .filter(
+      (item) =>
+        item.category === product.category &&
+        item.id !== product.id
+    )
+    .slice(0, 4);
+
+  if (relatedProducts.length === 0) {
+    return null;
+  }
 
   return (
-    <section className="mx-auto mt-20 max-w-7xl px-4 pb-20">
 
-      {/* Header */}
+    <section className="mt-24">
 
-      <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      {/* Heading */}
 
-        <div>
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: 20,
+        }}
+        whileInView={{
+          opacity: 1,
+          y: 0,
+        }}
+        viewport={{
+          once: true,
+        }}
+        className="mb-10"
+      >
 
-          <span className="rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold text-blue-700">
-            You May Also Like
-          </span>
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
 
-          <h2 className="mt-4 text-4xl font-black text-gray-900">
-            Related Products
-          </h2>
+          <div>
 
-          <p className="mt-2 max-w-2xl text-gray-500">
-            Explore more premium products carefully selected based on your interests.
-          </p>
+            <span
+              className="
+              rounded-full
+              bg-blue-100
+              px-4
+              py-2
+              text-sm
+              font-semibold
+              text-blue-700
+            "
+            >
+              Recommended
+            </span>
+
+            <h2 className="mt-4 text-4xl font-black text-gray-900">
+              Related Products
+            </h2>
+
+            <p className="mt-3 text-lg text-gray-500">
+              Similar products you might love.
+            </p>
+
+          </div>
+
+          <Link
+            to="/shop"
+            className="
+              inline-flex
+              items-center
+              gap-2
+              rounded-2xl
+              border
+              border-gray-200
+              bg-white
+              px-6
+              py-3
+              font-semibold
+              shadow-sm
+              transition-all
+              duration-300
+              hover:border-blue-600
+              hover:text-blue-600
+              hover:shadow-lg
+            "
+          >
+
+            View All
+
+            <ArrowRight size={18} />
+
+          </Link>
 
         </div>
 
-        <Link
-          to="/shop"
-          className="
-          inline-flex
-          items-center
-          gap-2
-          rounded-2xl
-          border
-          border-blue-600
-          px-6
-          py-3
-          font-semibold
-          text-blue-600
-          transition-all
-          duration-300
-          hover:-translate-y-1
-          hover:bg-blue-600
-          hover:text-white
-        "
-        >
-          View All
+      </motion.div>
 
-          <ArrowRight size={18} />
-        </Link>
+      {/* Products */}
 
-      </div>
+      <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
 
-      {/* Desktop Grid */}
-
-      <div className="hidden gap-7 md:grid md:grid-cols-2 xl:grid-cols-4">
-
-        {relatedProducts.map((product, index) => (
+        {relatedProducts.map((item) => (
 
           <motion.div
-            key={product.id}
+            key={item.id}
             initial={{
               opacity: 0,
-              y: 40,
+              y: 30,
             }}
             whileInView={{
               opacity: 1,
@@ -78,42 +120,14 @@ const RelatedProducts = () => {
               once: true,
             }}
             transition={{
-              delay: index * 0.12,
-              duration: 0.4,
+              duration: .35,
             }}
           >
-            <ProductCard product={product} />
-          </motion.div>
 
-        ))}
+            <ProductCard
+              product={item}
+            />
 
-      </div>
-
-      {/* Mobile Horizontal Scroll */}
-
-      <div className="flex gap-5 overflow-x-auto pb-4 md:hidden scrollbar-hide">
-
-        {relatedProducts.map((product, index) => (
-
-          <motion.div
-            key={product.id}
-            initial={{
-              opacity: 0,
-              x: 40,
-            }}
-            whileInView={{
-              opacity: 1,
-              x: 0,
-            }}
-            viewport={{
-              once: true,
-            }}
-            transition={{
-              delay: index * 0.08,
-            }}
-            className="min-w-[280px] max-w-[280px]"
-          >
-            <ProductCard product={product} />
           </motion.div>
 
         ))}
@@ -121,7 +135,9 @@ const RelatedProducts = () => {
       </div>
 
     </section>
+
   );
+
 };
 
 export default RelatedProducts;

@@ -1,284 +1,368 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Star, CheckCircle } from "lucide-react";
+import {
+  FileText,
+  ClipboardList,
+  Star,
+  MessageCircle,
+} from "lucide-react";
 
-const reviews = [
-  {
-    id: 1,
-    name: "John Smith",
-    rating: 5,
-    date: "2 days ago",
-    review:
-      "Amazing quality. The comfort is unbelievable and the delivery was very fast.",
-  },
-  {
-    id: 2,
-    name: "Sarah Wilson",
-    rating: 4,
-    date: "1 week ago",
-    review:
-      "Very premium shoe. Fits perfectly and looks exactly like the pictures.",
-  },
-];
+const ProductTabs = ({ product }) => {
 
-const specifications = [
-  ["Brand", "Nike"],
-  ["Model", "Air Jordan Retro High"],
-  ["Material", "Premium Leather"],
-  ["Weight", "420 g"],
-  ["Warranty", "1 Year"],
-  ["Country", "Vietnam"],
-  ["Gender", "Unisex"],
-];
+  const tabs = [
+    {
+      id: "description",
+      label: "Description",
+      icon: FileText,
+    },
+    {
+      id: "specifications",
+      label: "Specifications",
+      icon: ClipboardList,
+    },
+    {
+      id: "reviews",
+      label: "Reviews",
+      icon: Star,
+    },
+    {
+      id: "faq",
+      label: "FAQ",
+      icon: MessageCircle,
+    },
+  ];
 
-const tabs = [
-  "Description",
-  "Reviews",
-  "Specifications",
-];
-
-const ProductTabs = () => {
-  const [activeTab, setActiveTab] = useState("Description");
+  const [activeTab, setActiveTab] = useState("description");
 
   return (
-    <section className="mx-auto mt-16 max-w-7xl px-4">
 
-      {/* Tabs */}
+    <section className="mt-20">
 
-      <div className="flex flex-wrap gap-4 border-b border-gray-200">
+      <div className="rounded-3xl border border-gray-200 bg-white shadow-sm">
 
-        {tabs.map((tab) => (
+        {/* Header */}
 
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`
-              relative
-              px-6
-              py-4
-              text-lg
-              font-semibold
-              transition
-              ${
-                activeTab === tab
-                  ? "text-blue-600"
-                  : "text-gray-500 hover:text-blue-600"
-              }
-            `}
-          >
-            {tab}
+        <div className="flex flex-wrap border-b border-gray-200">
 
-            {activeTab === tab && (
-              <motion.div
-                layoutId="tabIndicator"
-                className="absolute bottom-0 left-0 h-1 w-full rounded-full bg-blue-600"
-              />
-            )}
-          </button>
+          {tabs.map((tab) => {
 
-        ))}
+            const Icon = tab.icon;
 
-      </div>
+            return (
 
-      <AnimatePresence mode="wait">
-
-        {/* Description */}
-
-        {activeTab === "Description" && (
-
-          <motion.div
-            key="description"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            className="mt-10 rounded-3xl border border-gray-200 bg-white p-8 shadow-sm"
-          >
-
-            <h2 className="mb-6 text-3xl font-black">
-              Product Description
-            </h2>
-
-            <p className="leading-8 text-gray-600">
-              Experience premium craftsmanship with the Nike Air Jordan
-              Retro High. Designed using high-quality leather and
-              engineered cushioning, this sneaker combines classic
-              heritage with modern comfort. Whether for daily wear or
-              performance, it provides exceptional grip, durability,
-              and all-day comfort.
-            </p>
-
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-
-              <div className="flex items-center gap-3">
-                <CheckCircle className="text-green-600" />
-                Premium Leather Material
-              </div>
-
-              <div className="flex items-center gap-3">
-                <CheckCircle className="text-green-600" />
-                Lightweight Construction
-              </div>
-
-              <div className="flex items-center gap-3">
-                <CheckCircle className="text-green-600" />
-                Breathable Inner Mesh
-              </div>
-
-              <div className="flex items-center gap-3">
-                <CheckCircle className="text-green-600" />
-                Comfortable Cushioned Sole
-              </div>
-
-            </div>
-
-          </motion.div>
-
-        )}
-
-        {/* Reviews */}
-
-        {activeTab === "Reviews" && (
-
-          <motion.div
-            key="reviews"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mt-10 space-y-6"
-          >
-
-            {/* Rating Summary */}
-
-            <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
-
-              <h2 className="text-3xl font-black">
-                Customer Reviews
-              </h2>
-
-              <div className="mt-5 flex items-center gap-4">
-
-                <span className="text-5xl font-black text-blue-600">
-                  4.9
-                </span>
-
-                <div>
-
-                  <div className="flex">
-                    {[1,2,3,4,5].map((item)=>(
-                      <Star
-                        key={item}
-                        size={20}
-                        className="fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
-                  </div>
-
-                  <p className="text-gray-500">
-                    Based on 2,364 reviews
-                  </p>
-
-                </div>
-
-              </div>
-
-            </div>
-
-            {/* Review Cards */}
-
-            {reviews.map((review) => (
-
-              <div
-                key={review.id}
-                className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm"
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`
+                  flex
+                  flex-1
+                  items-center
+                  justify-center
+                  gap-2
+                  px-6
+                  py-5
+                  font-semibold
+                  transition-all
+                  duration-300
+                  ${
+                    activeTab === tab.id
+                      ? "border-b-2 border-blue-600 bg-blue-50 text-blue-600"
+                      : "hover:bg-gray-50"
+                  }
+                `}
               >
+                <Icon size={18} />
 
-                <div className="flex items-center justify-between">
+                {tab.label}
 
-                  <div>
+              </button>
 
-                    <h3 className="font-bold">
-                      {review.name}
+            );
+
+          })}
+
+        </div>
+
+        {/* Content */}
+
+        <AnimatePresence mode="wait">
+
+          <motion.div
+            key={activeTab}
+            initial={{
+              opacity: 0,
+              y: 20,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            exit={{
+              opacity: 0,
+              y: -20,
+            }}
+            transition={{
+              duration: .3,
+            }}
+            className="p-8"
+          >
+                        {/* Description */}
+
+            {activeTab === "description" && (
+
+              <div className="space-y-6">
+
+                <h2 className="text-3xl font-black text-gray-900">
+                  Product Description
+                </h2>
+
+                <p className="leading-8 text-gray-600">
+                  {product.description}
+                </p>
+
+                <div className="grid gap-6 md:grid-cols-3">
+
+                  <div className="rounded-2xl bg-gray-50 p-6">
+
+                    <h3 className="font-bold text-gray-900">
+                      Premium Quality
                     </h3>
 
-                    <p className="text-sm text-gray-500">
-                      {review.date}
+                    <p className="mt-3 text-gray-500 leading-7">
+                      Built using high-quality materials
+                      for durability and long-lasting
+                      performance.
                     </p>
 
                   </div>
 
-                  <div className="flex">
+                  <div className="rounded-2xl bg-gray-50 p-6">
 
-                    {Array.from({ length: review.rating }).map((_, i) => (
-                      <Star
-                        key={i}
-                        size={16}
-                        className="fill-yellow-400 text-yellow-400"
-                      />
-                    ))}
+                    <h3 className="font-bold text-gray-900">
+                      Comfortable
+                    </h3>
+
+                    <p className="mt-3 text-gray-500 leading-7">
+                      Designed with comfort and usability
+                      in mind for everyday use.
+                    </p>
+
+                  </div>
+
+                  <div className="rounded-2xl bg-gray-50 p-6">
+
+                    <h3 className="font-bold text-gray-900">
+                      Modern Design
+                    </h3>
+
+                    <p className="mt-3 text-gray-500 leading-7">
+                      Minimal design inspired by premium
+                      global brands.
+                    </p>
 
                   </div>
 
                 </div>
-
-                <p className="mt-4 leading-7 text-gray-600">
-                  {review.review}
-                </p>
 
               </div>
 
-            ))}
+            )}
 
-          </motion.div>
+            {/* Specifications */}
 
-        )}
+            {activeTab === "specifications" && (
 
-        {/* Specifications */}
+              <div>
 
-        {activeTab === "Specifications" && (
+                <h2 className="mb-8 text-3xl font-black">
+                  Specifications
+                </h2>
 
-          <motion.div
-            key="specifications"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mt-10 rounded-3xl border border-gray-200 bg-white p-8 shadow-sm"
-          >
+                <div className="overflow-hidden rounded-2xl border border-gray-200">
 
-            <h2 className="mb-6 text-3xl font-black">
-              Specifications
-            </h2>
+                  <table className="w-full">
 
-            <div className="overflow-hidden rounded-2xl border">
+                    <tbody>
 
-              {specifications.map(([title, value]) => (
+                      <tr className="border-b">
 
-                <div
-                  key={title}
-                  className="grid grid-cols-2 border-b last:border-none"
-                >
+                        <td className="bg-gray-50 p-5 font-semibold">
+                          Brand
+                        </td>
 
-                  <div className="bg-gray-50 p-4 font-semibold">
-                    {title}
+                        <td className="p-5">
+                          {product.brand}
+                        </td>
+
+                      </tr>
+
+                      <tr className="border-b">
+
+                        <td className="bg-gray-50 p-5 font-semibold">
+                          Category
+                        </td>
+
+                        <td className="p-5">
+                          {product.category}
+                        </td>
+
+                      </tr>
+
+                      <tr className="border-b">
+
+                        <td className="bg-gray-50 p-5 font-semibold">
+                          SKU
+                        </td>
+
+                        <td className="p-5">
+                          {product.sku || "N/A"}
+                        </td>
+
+                      </tr>
+
+                      <tr>
+
+                        <td className="bg-gray-50 p-5 font-semibold">
+                          Warranty
+                        </td>
+
+                        <td className="p-5">
+                          1 Year Manufacturer Warranty
+                        </td>
+
+                      </tr>
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              </div>
+
+            )}
+
+            {/* Reviews */}
+
+            {activeTab === "reviews" && (
+
+              <div>
+
+                <h2 className="mb-8 text-3xl font-black">
+                  Customer Reviews
+                </h2>
+
+                {[1,2,3].map((review)=>(
+
+                  <div
+                    key={review}
+                    className="mb-6 rounded-2xl border border-gray-200 p-6"
+                  >
+
+                    <div className="flex items-center justify-between">
+
+                      <h3 className="font-bold">
+                        Customer {review}
+                      </h3>
+
+                      <div className="flex">
+
+                        {[1,2,3,4,5].map((star)=>(
+
+                          <Star
+                            key={star}
+                            size={16}
+                            className="fill-yellow-400 text-yellow-400"
+                          />
+
+                        ))}
+
+                      </div>
+
+                    </div>
+
+                    <p className="mt-4 leading-7 text-gray-600">
+                      Excellent product with premium
+                      quality. Highly recommended.
+                    </p>
+
                   </div>
 
-                  <div className="p-4">
-                    {value}
+                ))}
+
+              </div>
+
+            )}
+
+            {/* FAQ */}
+
+            {activeTab === "faq" && (
+
+              <div>
+
+                <h2 className="mb-8 text-3xl font-black">
+                  Frequently Asked Questions
+                </h2>
+
+                <div className="space-y-5">
+
+                  <div className="rounded-2xl border border-gray-200 p-6">
+
+                    <h3 className="font-bold">
+                      Is this product original?
+                    </h3>
+
+                    <p className="mt-3 text-gray-500 leading-7">
+                      Yes. Every product sold on our
+                      platform is 100% genuine and
+                      quality checked.
+                    </p>
+
+                  </div>
+
+                  <div className="rounded-2xl border border-gray-200 p-6">
+
+                    <h3 className="font-bold">
+                      Can I return this product?
+                    </h3>
+
+                    <p className="mt-3 text-gray-500 leading-7">
+                      Yes. You can return it within
+                      30 days if it meets our return
+                      policy.
+                    </p>
+
+                  </div>
+
+                  <div className="rounded-2xl border border-gray-200 p-6">
+
+                    <h3 className="font-bold">
+                      Does it include warranty?
+                    </h3>
+
+                    <p className="mt-3 text-gray-500 leading-7">
+                      Yes, manufacturer warranty is
+                      available where applicable.
+                    </p>
+
                   </div>
 
                 </div>
 
-              ))}
+              </div>
 
-            </div>
+            )}
 
           </motion.div>
 
-        )}
+        </AnimatePresence>
 
-      </AnimatePresence>
+      </div>
 
     </section>
+
   );
+
 };
 
 export default ProductTabs;
