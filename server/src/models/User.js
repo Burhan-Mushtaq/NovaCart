@@ -99,3 +99,81 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+userSchema.pre(
+  "save",
+  async function (next) {
+
+    if (!this.isModified("password")) {
+      return next();
+    }
+
+    const salt = await bcrypt.genSalt(10);
+
+    this.password = await bcrypt.hash(
+      this.password,
+      salt
+    );
+
+    next();
+
+  }
+);
+
+userSchema.methods.comparePassword =
+  async function (enteredPassword) {
+
+    return await bcrypt.compare(
+      enteredPassword,
+      this.password
+    );
+
+  };
+userSchema.methods.generateToken =
+  function () {
+
+    return jwt.sign(
+      {
+        id: this._id,
+        role: this.role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn:
+          process.env.JWT_EXPIRE,
+      }
+    );
+
+  };
+userSchema.methods.generateOTP =
+  function () {
+
+    const otp = Math.floor(
+      100000 +
+      Math.random() * 900000
+    ).toString();
+
+    this.otp = otp;
+
+    this.otpExpiry =
+      Date.now() + 10 * 60 * 1000;
+
+    return otp;
+
+  };
+
+  userSchema.methods.clearOTP =
+  function () {
+
+    this.otp = undefined;
+
+    this.otpExpiry = undefined;
+
+  };
+
+  const User = mongoose.model(
+  "User",
+  userSchema
+);
+
+export default User;
