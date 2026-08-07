@@ -141,3 +141,26 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   });
 
 });
+
+
+
+export const searchProducts = asyncHandler(async (req, res) => {
+  res.json({
+    success: true,
+    message: "Search endpoint coming soon",
+  });
+});
+
+export const getRelatedProducts = asyncHandler(async (req, res) => {
+  res.json({
+    success: true,
+    message: "Related products endpoint coming soon",
+  });
+});
+
+export const addReview = asyncHandler(async (req, res) => {
+  res.json({
+    success: true,
+    message: "Review endpoint coming soon",
+  });
+});
