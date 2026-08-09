@@ -336,12 +336,6 @@ export const getProduct = asyncHandler(async (req, res) => {
   });
 });
 
-/*
-|--------------------------------------------------------------------------
-| UPDATE PRODUCT
-|--------------------------------------------------------------------------
-*/
-
 export const updateProduct = asyncHandler(async (req, res) => {
   const product = await Product.findById(
     req.params.id
@@ -353,12 +347,6 @@ export const updateProduct = asyncHandler(async (req, res) => {
       message: "Product not found.",
     });
   }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Check Category
-  |--------------------------------------------------------------------------
-  */
 
   if (req.body.category) {
     const category = await Category.findById(
@@ -372,13 +360,6 @@ export const updateProduct = asyncHandler(async (req, res) => {
       });
     }
   }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Check Duplicate SKU
-  |--------------------------------------------------------------------------
-  */
-
   if (req.body.sku) {
     const existingSKU =
       await Product.findOne({
@@ -395,12 +376,6 @@ export const updateProduct = asyncHandler(async (req, res) => {
       });
     }
   }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Check Duplicate Slug
-  |--------------------------------------------------------------------------
-  */
 
   if (req.body.slug) {
     const existingSlug =
@@ -564,11 +539,6 @@ export const getRelatedProducts =
       products,
     });
   });
-  /*
-|--------------------------------------------------------------------------
-| ADD PRODUCT REVIEW
-|--------------------------------------------------------------------------
-*/
 
 export const addReview = asyncHandler(
   async (req, res) => {
@@ -611,12 +581,6 @@ export const addReview = asyncHandler(
       });
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Prevent Duplicate Review
-    |--------------------------------------------------------------------------
-    */
-
     const alreadyReviewed =
       product.reviews.find(
         (review) =>
@@ -631,12 +595,6 @@ export const addReview = asyncHandler(
           "You have already reviewed this product.",
       });
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Add Review
-    |--------------------------------------------------------------------------
-    */
 
     product.reviews.push({
       user: req.user._id,
@@ -675,6 +633,149 @@ export const addReview = asyncHandler(
       message:
         "Review added successfully.",
       product: updatedProduct,
+    });
+  }
+);
+
+export const updateReview = asyncHandler(
+  async (req, res) => {
+    const { rating, comment } = req.body;
+
+    const product = await Product.findById(
+      req.params.id
+    );
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      });
+    }
+
+    const review = product.reviews.find(
+      (item) =>
+        item.user.toString() ===
+        req.user._id.toString()
+    );
+
+    if (!review) {
+      return res.status(404).json({
+        success: false,
+        message: "Review not found.",
+      });
+    }
+
+    if (rating !== undefined) {
+      const numericRating = Number(rating);
+
+      if (
+        numericRating < 1 ||
+        numericRating > 5
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Rating must be between 1 and 5.",
+        });
+      }
+
+      review.rating = numericRating;
+    }
+
+    if (comment !== undefined) {
+      if (!comment.trim()) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Comment cannot be empty.",
+        });
+      }
+
+      review.comment = comment.trim();
+    }
+    product.numReviews =
+      product.reviews.length;
+
+    const totalRating =
+      product.reviews.reduce(
+        (sum, item) =>
+          sum + item.rating,
+        0
+      );
+
+    product.ratings =
+      product.numReviews > 0
+        ? totalRating / product.numReviews
+        : 0;
+
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Review updated successfully.",
+      product,
+    });
+  }
+);
+
+export const deleteReview = asyncHandler(
+  async (req, res) => {
+    const product = await Product.findById(
+      req.params.id
+    );
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      });
+    }
+
+    const reviewIndex =
+      product.reviews.findIndex(
+        (item) =>
+          item.user.toString() ===
+          req.user._id.toString()
+      );
+
+    if (reviewIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        message: "Review not found.",
+      });
+    }
+
+    product.reviews.splice(
+      reviewIndex,
+      1
+    );
+
+    product.numReviews =
+      product.reviews.length;
+
+    if (product.numReviews === 0) {
+      product.ratings = 0;
+    } else {
+      const totalRating =
+        product.reviews.reduce(
+          (sum, item) =>
+            sum + item.rating,
+          0
+        );
+
+      product.ratings =
+        totalRating /
+        product.numReviews;
+    }
+
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Review deleted successfully.",
+      product,
     });
   }
 );

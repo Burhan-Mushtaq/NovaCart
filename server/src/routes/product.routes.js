@@ -1,5 +1,4 @@
 import express from "express";
-
 import {
   createProduct,
   getProducts,
@@ -9,6 +8,8 @@ import {
   searchProducts,
   getRelatedProducts,
   addReview,
+  updateReview,
+  deleteReview,
 } from "../controllers/product.controller.js";
 
 import {
@@ -32,25 +33,15 @@ router.post(
   addReview
 );
 
-router.post(
-  "/",
-  protect,
-  adminOnly,
-  createProduct
-);
-
 router.put(
-  "/:id",
+  "/:id/review",
   protect,
-  adminOnly,
-  updateProduct
+  updateReview
 );
 
 router.delete(
-  "/:id",
+  "/:id/review",
   protect,
-  adminOnly,
-  deleteProduct
+  deleteReview
 );
-
 export default router;
