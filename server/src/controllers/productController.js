@@ -2,6 +2,12 @@ import Product from "../models/Product.js";
 import Category from "../models/Category.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
+import {
+  uploadImage,
+  uploadMultipleImages,
+  deleteImage,
+} from "../services/cloudinary.service.js";
+
 
 export const createProduct = asyncHandler(async (req, res) => {
   const {
@@ -779,3 +785,124 @@ export const deleteReview = asyncHandler(
     });
   }
 );
+
+export const uploadProductImages = asyncHandler(
+  async (req, res) => {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      });
+    }
+
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please select at least one image.",
+      });
+    }
+
+    const uploadedImages =
+      await uploadMultipleImages(
+        req.files,
+        "ecommerce/products"
+      );
+
+    product.images = [
+      ...(product.images || []),
+      ...uploadedImages,
+    ];
+
+
+    if (
+      !product.thumbnail?.url &&
+      uploadedImages.length > 0
+    ) {
+      product.thumbnail =
+        uploadedImages[0];
+    }
+
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Product images uploaded successfully.",
+      images: uploadedImages,
+      product,
+    });
+  }
+);
+
+export const deleteProductImage =
+  asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { public_id } = req.body;
+
+    if (!public_id) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Cloudinary public_id is required.",
+      });
+    }
+
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found.",
+      });
+    }
+
+    const imageExists =
+      product.images?.find(
+        (image) =>
+          image.public_id === public_id
+      );
+
+    if (!imageExists) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "Image does not belong to this product.",
+      });
+    }
+
+    await deleteImage(public_id);
+
+
+    product.images =
+      product.images.filter(
+        (image) =>
+          image.public_id !== public_id
+      );
+
+
+    if (
+      product.thumbnail?.public_id ===
+      public_id
+    ) {
+      product.thumbnail =
+        product.images.length > 0
+          ? product.images[0]
+          : {
+              public_id: "",
+              url: "",
+            };
+    }
+
+    await product.save();
+
+    res.status(200).json({
+      success: true,
+      message:
+        "Product image deleted successfully.",
+      product,
+    });
+  });
